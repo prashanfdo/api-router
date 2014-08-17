@@ -11,14 +11,42 @@ Install the module with: `npm install api-router`
 var api-router = require('api-router');
 ```
   
-## Documentation
+## Usage
 
-_(Coming soon)_
+```js
+var express = require('express');
+var api-router = require('api-router');
 
+app = express();
 
-## Examples
-
-_(Coming soon)_
+apiRouter(app,{
+                authResolver: function(req, res, next) {
+                    return true;
+                },
+                authorizationResolver: function(req, res, next) {
+                    return true;
+                },
+                url: 'api',
+                get: return200,
+                post: return200,
+                getMeta: {
+                    anonymous: true,
+                    method: return200
+                },
+                postMeta: return200,
+                routes: [{
+                    url: 'user',
+                    get: return200,
+                    postUser: return200,
+                    routes: [{
+                        url: 'admin',
+                        postCreate: return200
+                    }]
+                }]
+            });
+            server = app.listen(3000);
+            done();
+```
 
 
 ## Contributing
