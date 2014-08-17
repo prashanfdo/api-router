@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-Install the module with: `npm install api-router`
+Install the module with: `npm install api-router --save`
 
 ```js
 var api-router = require('api-router');
