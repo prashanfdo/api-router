@@ -52,6 +52,9 @@ module.exports = function(grunt) {
             },
             all: {
                 src: ['test/*.js']
+            },
+            auth:{
+                src:['test/test-auth.js']
             }
         },
         jshint: {
@@ -102,5 +105,6 @@ module.exports = function(grunt) {
     // Default task.
     //grunt.registerTask('default', ['simplemocha', 'node-inspector', 'watch']);
     grunt.registerTask('default', ['simplemocha']);
+    grunt.registerTask('test-auth', ['simplemocha:auth']);
 
 };

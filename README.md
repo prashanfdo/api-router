@@ -1,6 +1,6 @@
 # api-router [![Build Status](https://secure.travis-ci.org/prashanfdo/api-router.png?branch=master)](http://travis-ci.org/prashanfdo/api-router)
 
-> Beefup your routes in minutes
+> Beefup your routes in minutes.
 
 
 ## Getting Started

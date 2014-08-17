@@ -58,53 +58,6 @@ describe('api-router', function() {
 
         });
     });
-    describe('Authed Routing', function() {
-        var app, server;
-        before(function(done) {
-            app = express();
-            var ops = {
-                authResolver: function(req, res, next) {
-                    console.log(req.cookies, 'asd');
-                    return true;
-                },
-                authorizationResolver: function(req, res, next) {
-                    return true;
-                },
-                url: 'api',
-                get: return200,
-                routes:[{
-                    url:'signin',
-                    post:function  (req,res,next) {
-                        console.log(text)
-                         res.status(200).send({
-                            hello: 'world'
-                        });
-                        next();
-                    }
-                }]
-            };
-            apiRouter(app, ops);
-            server = app.listen(3000);
-            this.session = new Session();
-            done();
-        });
-        after(function(done) {
-            server.close();
-            this.sesson.destroy();
-            done();
-        });
-
-        it('should sign in user', function(done) {
-            this.sess.post('/api/signin')
-                .send({
-                    username: 'admin',
-                    password: 'admin'
-                })
-                .expect(200)
-                .end(done);
-        }); 
-    });
-
 });
 
 function return200(req, res) {
