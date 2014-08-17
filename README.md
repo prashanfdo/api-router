@@ -11,14 +11,72 @@ Install the module with: `npm install api-router`
 var api-router = require('api-router');
 ```
   
-## Documentation
+## Usage
 
-_(Coming soon)_
+```js
+var express = require('express');
+var api-router = require('api-router');
 
+app = express();
 
-## Examples
-
-_(Coming soon)_
+apiRouter(app,{
+                url: 'api',
+                authResolver: function(req, res) {
+                    return true;
+                },
+                authorizationResolver: function(roles,req, res) {
+                    return true;
+                },
+                // GET /api
+                get: function(req,res){
+                  res.send({
+                      hello: 'world'
+                  });
+                },
+                // POST /api
+                post:  function(req,res){
+                  res.send({
+                      hello: 'post-er'
+                  });
+                },
+                // write your get,post methods with methods. This method will be routed to -> GET /api/meta
+                getMeta: {
+                    anonymous: true, //-> allow anonymous access
+                    method: function(req,res){
+                        res.send({hello: 'anonymous'});
+                    }
+                },
+                //-> POST /api/meta
+                postMeta: return200,
+                //child routes
+                routes: [{
+                    url: 'user',
+                    //-> GET /api/user
+                    get: function(req,res){
+                      res.send({
+                          hello: 'world'
+                      });
+                    },
+                    //-> POST /api/user
+                    postUser: function(req,res){
+                      res.send({
+                          hello: 'world'
+                      });
+                    },
+                    routes: [{
+                        url: 'admin',
+                        //-> POST /api/user/admin
+                        postCreate: function(req,res){
+                          res.send({
+                              hello: 'world'
+                          });
+                        }
+                    }]
+                }]
+            });
+            server = app.listen(3000);
+            done();
+```
 
 
 ## Contributing
