@@ -1,4 +1,4 @@
-# api-router [![Build Status](https://secure.travis-ci.org/prashanfdo/api-router.png?branch=master)](http://travis-ci.org/prashanfdo/api-router)
+# api-router [![Build Status](https://travis-ci.org/Prashanfdo/api-router.svg)](http://travis-ci.org/prashanfdo/api-router)
 
 > Beefup your routes in minutes.
 
@@ -9,25 +9,8 @@ Install the module with: `npm install api-router`
 
 ```js
 var api-router = require('api-router');
-api-router.awesome(); // "awesome"
 ```
-
-Install with cli command
-
-```sh
-$ npm install -g api-router
-$ api-router --help
-$ api-router --version
-```
-
-
-```sh
-# creates a browser.js
-$ grunt browserify
-```
-
-
-
+  
 ## Documentation
 
 _(Coming soon)_
