@@ -20,27 +20,57 @@ var api-router = require('api-router');
 app = express();
 
 apiRouter(app,{
-                authResolver: function(req, res, next) {
-                    return true;
-                },
-                authorizationResolver: function(req, res, next) {
-                    return true;
-                },
                 url: 'api',
-                get: return200,
-                post: return200,
-                getMeta: {
-                    anonymous: true,
-                    method: return200
+                authResolver: function(req, res) {
+                    return true;
                 },
+                authorizationResolver: function(roles,req, res) {
+                    return true;
+                },
+                // GET /api
+                get: function(req,res){
+                  res.send({
+                      hello: 'world'
+                  });
+                },
+                // POST /api
+                post:  function(req,res){
+                  res.send({
+                      hello: 'post-er'
+                  });
+                },
+                // write your get,post methods with methods. This method will be routed to -> GET /api/meta
+                getMeta: {
+                    anonymous: true, //-> allow anonymous access
+                    method: function(req,res){
+                        res.send({hello: 'anonymous'});
+                    }
+                },
+                //-> POST /api/meta
                 postMeta: return200,
+                //child routes
                 routes: [{
                     url: 'user',
-                    get: return200,
-                    postUser: return200,
+                    //-> GET /api/user
+                    get: function(req,res){
+                      res.send({
+                          hello: 'world'
+                      });
+                    },
+                    //-> POST /api/user
+                    postUser: function(req,res){
+                      res.send({
+                          hello: 'world'
+                      });
+                    },
                     routes: [{
                         url: 'admin',
-                        postCreate: return200
+                        //-> POST /api/user/admin
+                        postCreate: function(req,res){
+                          res.send({
+                              hello: 'world'
+                          });
+                        }
                     }]
                 }]
             });
