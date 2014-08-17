@@ -51,11 +51,7 @@
     "supertest-session": "0.0.2"
   },
   "scripts": {
-    "test": "grunt",
-    "browser": "browserify lib/api-router.js > browser.js"
-  },
-  "bin": {
-    "api-router": "cli.js"
+    "test": "grunt"
   },
   "preferGlobal": "true",
   "dependencies": {
