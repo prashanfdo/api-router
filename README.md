@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-Install the module with: `npm install api-router --save`
+Install the module with: `npm install api-router`
 
 ```js
 var api-router = require('api-router');
@@ -75,7 +75,7 @@ apiRouter(app,{
                 }]
             });
             server = app.listen(3000);
-            
+            done();
 ```
 
 
