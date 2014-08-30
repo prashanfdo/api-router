@@ -44,7 +44,8 @@ describe('api-router', function() {
                     }
                 }]
             };
-            apiRouter(app, ops);
+            var r = new apiRouter(app, ops);
+            r.passportAuth();
             server = app.listen(3000);
             this.authedSession = new Session();
             done();

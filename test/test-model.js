@@ -6,14 +6,19 @@ var assert = require('assert');
 var request = require('supertest');
 var express = require('express');
 var apiRouter = require('../lib/api-router.js');
-var Session = require('supertest-session')({app:'localhost:3000'});
-
+var Session = require('supertest-session')({
+    app: 'localhost:3000'
+});
+var cookieParser = require('cookie-parser'); 
+var mongoose = require('mongoose');
+require('./test-db.js');
 
 describe('api-router', function() {
-    describe('Basics', function() {
+    describe('Model routing', function() {
         var app, server;
         before(function(done) {
             app = express();
+            var thingsModel = mongoose.model('Thing');
             var ops = {
                 authResolver: function(req, res, next) {
                     return true;
@@ -23,21 +28,7 @@ describe('api-router', function() {
                 },
                 url: 'api',
                 get: return200,
-                post: return200,
-                getMeta: {
-                    anonymous: true,
-                    method: return200
-                },
-                postMeta: return200,
-                routes: [{
-                    url: 'user', 
-                    get: return200,
-                    postUser: return200,
-                    routes: [{
-                        url: 'admin',
-                        postCreate: return200
-                    }]
-                }]
+                model:thingsModel,
             };
             apiRouter(app, ops);
             server = app.listen(3000);
@@ -49,12 +40,14 @@ describe('api-router', function() {
         });
         describe('routing', function() {
             test('get', '/api');
-            test('post', '/api');
-            test('get', '/api/meta');
-            test('post', '/api/meta');
-            test('get', '/api/user');
-            test('post', '/api/user/user');
-            test('post', '/api/user/admin/create');
+            test('post', '/api/things',function  (res) {
+                if(!('id' in res.body)) return 'Failed';
+            });
+            // test('get', '/api/meta');
+            // test('post', '/api/meta');
+            // test('get', '/api/user');
+            // test('post', '/api/user/user');
+            // test('post', '/api/user/admin/create');
 
         });
     });
@@ -66,14 +59,14 @@ function return200(req, res) {
     });
 }
 
-function test(verb, url, status, reqOverride) {
+function test(verb, url, test, reqOverride) {
     it(verb.toUpperCase() + ' ' + url, function(done) {
         var req = request('localhost:3000')[verb](url)
-            .set('Accept', 'application/json')
-            .set('Cookie', 'myApp-token=12345667');
+            .set('Accept', 'application/json');
         if (reqOverride) {
             reqOverride(req);
         }
-        req.expect(status || 200, done);
+        req.expect(test || 200)
+        .end(done);
     });
 }

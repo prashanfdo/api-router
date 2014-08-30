@@ -55,6 +55,9 @@ module.exports = function(grunt) {
             },
             auth:{
                 src:['test/test-auth.js']
+            },
+            modelBind:{
+                src:['test/test-model.js']
             }
         },
         jshint: {
@@ -106,5 +109,6 @@ module.exports = function(grunt) {
     //grunt.registerTask('default', ['simplemocha', 'node-inspector', 'watch']);
     grunt.registerTask('default', ['simplemocha']);
     grunt.registerTask('test-auth', ['simplemocha:auth']);
+    grunt.registerTask('test-modelbind', ['simplemocha:modelBind']);
 
 };
