@@ -77,7 +77,24 @@ apiRouter(app,{
             server = app.listen(3000);
             done();
 ```
+## Featrures
 
+### Mongoose model bind
+Bind a Mongoose model directly.
+```js
+var BlogPostModel = mongoose.model('BlogPost');
+var ops = {
+                authResolver: function(req, res, next) {
+                    return true;
+                },
+                authorizationResolver: function(req, res, next) {
+                    return true;
+                },
+                url: 'api',
+                model:BlogPostModel, // or just pass the model name 'BlogPost'
+            };
+apiRouter(app, ops);
+```
 
 ## Contributing
 
