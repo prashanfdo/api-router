@@ -107,7 +107,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     // Default task.
     //grunt.registerTask('default', ['simplemocha', 'node-inspector', 'watch']);
-    grunt.registerTask('default', ['simplemocha']);
+    grunt.registerTask('default', ['simplemocha:all']);
     grunt.registerTask('test-auth', ['simplemocha:auth']);
     grunt.registerTask('test-modelbind', ['simplemocha:modelBind']);
 
