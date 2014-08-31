@@ -58,6 +58,7 @@
     "change-case": "^2.1.1",
     "underscore": "^1.6.0",
     "passport": "^0.2.0",
-    "mongoose": "^3.8.15"
+    "mongoose": "^3.8.15",
+    "body-parser": "^1.6.7"
   }
 }

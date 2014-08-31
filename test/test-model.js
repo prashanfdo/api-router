@@ -10,15 +10,19 @@ var Session = require('supertest-session')({
     app: 'localhost:3000'
 });
 var cookieParser = require('cookie-parser'); 
+var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-require('./test-db.js');
+var db = require('./test-db.js');
+
+var thingsModel = mongoose.model('Thing');
+
 
 describe('api-router', function() {
     describe('Model routing', function() {
-        var app, server;
+        var app, server,things;
         before(function(done) {
             app = express();
-            var thingsModel = mongoose.model('Thing');
+            app.use(bodyParser.json());
             var ops = {
                 authResolver: function(req, res, next) {
                     return true;
@@ -31,24 +35,33 @@ describe('api-router', function() {
                 model:thingsModel,
             };
             apiRouter(app, ops);
-            server = app.listen(3000);
-            done();
+            server = app.listen(3000); 
+            db.seedThings(function  () {
+                thingsModel.find(function (err, result) {
+                    things = result; 
+                    done();
+                });                
+            });
         });
         after(function(done) {
             server.close();
             done();
         });
-        describe('routing', function() {
-            test('get', '/api');
-            test('post', '/api/things',function  (res) {
-                if(!('id' in res.body)) return 'Failed';
+        describe('routing', function() { 
+            var that = this;
+            test('get', '/api/thing',function  (res) {
+                if(JSON.stringify(res.body) !== JSON.stringify(things))
+                    return 'Failed';
             });
-            // test('get', '/api/meta');
-            // test('post', '/api/meta');
-            // test('get', '/api/user');
-            // test('post', '/api/user/user');
-            // test('post', '/api/user/admin/create');
-
+            test('post', '/api/thing',201,undefined,{name:'X',info:'XX'});
+            test('get', function  () {
+                return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
+            },function  (res) {  
+                if(JSON.stringify(res.body) !== JSON.stringify(things[0])) return 'Failed';
+            });
+            test('delete', function  () {
+                return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
+            },204); 
         });
     });
 });
@@ -59,10 +72,19 @@ function return200(req, res) {
     });
 }
 
-function test(verb, url, test, reqOverride) {
-    it(verb.toUpperCase() + ' ' + url, function(done) {
+function test(verb, url, test, reqOverride,data) { 
+    var urlName = url;
+    if(typeof(url) === 'function'){
+        urlName = url()[0];
+    }
+    it(verb.toUpperCase() + ' ' + urlName, function(done) {
+        if(typeof(url) === 'function'){
+            url = url()[1]; 
+        }
         var req = request('localhost:3000')[verb](url)
             .set('Accept', 'application/json');
+        if(data)
+            req.send(data);
         if (reqOverride) {
             reqOverride(req);
         }
