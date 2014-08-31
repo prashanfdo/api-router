@@ -12,7 +12,7 @@ var Session = require('supertest-session')({
 var cookieParser = require('cookie-parser'); 
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-require('./test-db.js');
+var db = require('./test-db.js');
 
 var thingsModel = mongoose.model('Thing');
 
@@ -36,9 +36,11 @@ describe('api-router', function() {
             };
             apiRouter(app, ops);
             server = app.listen(3000); 
-            thingsModel.find(function (err, result) {
-                things = result; 
-                done();
+            db.seedThings(function  () {
+                thingsModel.find(function (err, result) {
+                    things = result; 
+                    done();
+                });                
             });
         });
         after(function(done) {
