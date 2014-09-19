@@ -48,16 +48,25 @@ module.exports = function(grunt) {
                 timeout: 3000,
                 ignoreLeaks: false,
                 ui: 'bdd',
-                reporter: 'tap'
+                reporter: 'spec'
             },
             all: {
                 src: ['test/*.js']
+            },
+            basic:{
+                src:['test/test-basic.js']
             },
             auth:{
                 src:['test/test-auth.js']
             },
             modelBind:{
                 src:['test/test-model.js']
+            },
+            inlineparser:{
+                src:['test/test-parser.js']
+            },
+            clientscript:{
+                src:['test/test-client-script.js']
             }
         },
         jshint: {
@@ -108,7 +117,10 @@ module.exports = function(grunt) {
     // Default task.
     //grunt.registerTask('default', ['simplemocha', 'node-inspector', 'watch']);
     grunt.registerTask('default', ['simplemocha:all']);
+    grunt.registerTask('test-basic', ['simplemocha:basic']);
     grunt.registerTask('test-auth', ['simplemocha:auth']);
     grunt.registerTask('test-modelbind', ['simplemocha:modelBind']);
+    grunt.registerTask('test-clientscript', ['simplemocha:clientscript']);
+    grunt.registerTask('test-inlineparser', ['simplemocha:inlineparser']);
 
 };

@@ -19,20 +19,20 @@ describe('api-router', function() {
             app = express();
             app.use(cookieParser());
             var ops = {
-                authResolver: function(req, res, next) {
+                authenticator: function(req, res, next) { 
                         return !!req.cookies.user;
                 },
-                authorizationResolver: function(req, res, next) {
+                authorizer: function(req, res, next) {
                     return true;
                 },
-                url: 'api',
+                path: 'api',
                 get: return200,
-                getTouch: function(req, res, next) {
+                getTouch: function(req, res, next) { 
                     res.status(200).send();
                     next();
                 },
                 routes: [{
-                    url: 'signin',
+                    path: 'signin',
                     anonymous: true,
                     post: function(req, res, next) {
                         res

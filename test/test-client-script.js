@@ -10,23 +10,24 @@ var Session = require('supertest-session')({app:'localhost:3000'});
 
 
 describe('api-router', function() {
-    describe('Basics', function() {
+    describe('Client Scripts', function() {
         var app, server;
         before(function(done) {
             app = express();
             var ops = {
-                authResolver: function(req, res, next) {
+                authenticator: function(req, res, next) {
                     return true;
                 },
-                authorizationResolver: function(req, res, next) {
+                authorizer: function(req, res, next) {
                     return true;
                 },
+                clientScript:{},
                 url: 'api',
                 get: return200,
                 post: return200,
                 getMeta: {
                     anonymous: true,
-                    method: return200
+                    fun: return200
                 },
                 postMeta: return200,
                 routes: [{
@@ -47,14 +48,7 @@ describe('api-router', function() {
             server.close();
             done();
         });
-        describe('routing', function() {
-            test('get', '/api');
-            test('post', '/api');
-            test('get', '/api/meta');
-            test('post', '/api/meta');
-            test('get', '/api/user');
-            test('post', '/api/user/user');
-            test('post', '/api/user/admin/create');
+        describe('routing', function() { 
 
         });
     });
