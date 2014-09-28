@@ -1,73 +1,74 @@
 'use strict';
 //node-debug C:\Users\prashanf\AppData\Roaming\npm\node_modules\grunt-cli\bin\grunt default
-var apiRouter = require('../lib/api-router.js');
+var clientScriptGenerator = require('../lib/client-script-generator.js');
 var should = require('should');
-var assert = require('assert');
-var request = require('supertest');
-var express = require('express');
-var apiRouter = require('../lib/api-router.js');
-var Session = require('supertest-session')({app:'localhost:3000'});
 
 
 describe('api-router', function() {
     describe('Client Scripts', function() {
-        var app, server;
-        before(function(done) {
-            app = express();
-            var ops = {
-                authenticator: function(req, res, next) {
-                    return true;
-                },
-                authorizer: function(req, res, next) {
-                    return true;
-                },
-                clientScript:{},
-                url: 'api',
-                get: return200,
-                post: return200,
-                getMeta: {
-                    anonymous: true,
-                    fun: return200
-                },
-                postMeta: return200,
-                routes: [{
-                    url: 'user', 
-                    get: return200,
-                    postUser: return200,
-                    routes: [{
-                        url: 'admin',
-                        postCreate: return200
+        describe('initial', function() {
+            it('Sould pass basics', function() {
+                var generator = new clientScriptGenerator({
+                	name:'api',
+                    methods: [{
+                        namespace: 'api',
+                        url: '/api/signin',
+                        name:'signin',
+                        verb:'post',
+                        params: ['data']
+                    },{
+                        namespace: 'api',
+                        url: '/api/touch',
+                        name:'touch',
+                        verb:'get',
+                        params: ['data']
+                    },{
+                        namespace: 'api.user',
+                        url: '/api/user/admin',
+                        name:'getAdmin',
+                        verb:'get',
+                        params: ['data']
+                    },{
+                        namespace: 'api.thing',
+                        url: '/api/thing',
+                        name:'find',
+                        verb:'get',
+                        params: []
+                    },{
+                        namespace: 'api.thing',
+                        url: '/api/thing/:id',
+                        name:'findById',
+                        verb:'get',
+                        params: ['id']
+                    },{
+                        namespace: 'api.thing',
+                        url: '/api/thing',
+                        name:'add',
+                        verb:'post',
+                        params: ['data']
+                    },{
+                        namespace: 'api.thing',
+                        url: '/api/thing/:id',
+                        name:'update',
+                        verb:'put',
+                        params: ['id','data']
+                    },{
+                        namespace: 'api.thing',
+                        url: '/api/thing/:id',
+                        name:'remove',
+                        verb:'delete',
+                        params: ['id']
                     }]
-                }]
-            };
-            apiRouter(app, ops);
-            server = app.listen(3000);
-            done();
-        });
-        after(function(done) {
-            server.close();
-            done();
-        });
-        describe('routing', function() { 
-
+                });
+                var script = generator.getScript(); 
+            });
         });
     });
-});
-
-function return200(req, res) {
-    res.status(200).send({
-        hello: 'world'
-    });
-}
-
-function test(verb, url, status, reqOverride) {
-    it(verb.toUpperCase() + ' ' + url, function(done) {
-        var req = request('localhost:3000')[verb](url)
-            .set('Accept', 'application/json')
-            .set('Cookie', 'myApp-token=12345667');
-        if (reqOverride) {
-            reqOverride(req);
-        }
-        req.expect(status || 200, done);
-    });
-}
+}); 
+// POST     ano:true       allow:          /api/signin
+// GET      ano:false      allow:          /api/touch  
+// GET      ano:false      allow:          /api/user/admin
+// GET      ano:false      allow:          /api/thing 
+// GET      ano:false      allow:          /api/thing/:id
+// PUT      ano:false      allow:          /api/thing/:id
+// DELETE   ano:false      allow:          /api/thing/:id
