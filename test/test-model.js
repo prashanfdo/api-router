@@ -24,15 +24,18 @@ describe('api-router', function() {
             app = express();
             app.use(bodyParser.json());
             var ops = {
-                authResolver: function(req, res, next) {
+                authenticator: function(req, res, next) {
                     return true;
                 },
-                authorizationResolver: function(req, res, next) {
+                authorizer: function(req, res, next) {
                     return true;
                 },
-                url: 'api',
+                path: 'api',
                 get: return200,
-                model:thingsModel,
+                models:[{
+                    path:'thing',
+                    model:thingsModel,
+                }],
             };
             apiRouter(app, ops);
             server = app.listen(3000); 
@@ -53,15 +56,56 @@ describe('api-router', function() {
                 if(JSON.stringify(res.body) !== JSON.stringify(things))
                     return 'Failed';
             });
-            test('post', '/api/thing',201,undefined,{name:'X',info:'XX'});
-            test('get', function  () {
-                return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
-            },function  (res) {  
-                if(JSON.stringify(res.body) !== JSON.stringify(things[0])) return 'Failed';
+            var createObj;
+            it('POST\t/api/thing',function  (done) { 
+                var req = request('localhost:3000').post('/api/thing')
+                    .set('Accept', 'application/json'); 
+                    req.send({name:'X',info:'XX'}); 
+                req.expect(201)
+                .end(function  (err,res,body) {
+                    createObj = res.body; 
+                    done();
+                });
             });
-            test('delete', function  () {
-                return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
-            },204); 
+            it('GET\t/api/thing/:id',function  (done) { 
+                var req = request('localhost:3000').get('/api/thing/'+createObj._id)
+                    .set('Accept', 'application/json'); 
+                    req.send(); 
+                req.expect(200)
+                .end(function  (err,res,body) {  
+                    done();
+                });
+            });
+            it('PUT\t/api/thing/:id',function  (done) { 
+                var req = request('localhost:3000').put('/api/thing/'+createObj._id)
+                    .set('Accept', 'application/json'); 
+                    req.send({name:'Y'});
+                req.expect(function  (res) { 
+                    return (res.body.name === 'Y');
+                })
+                .end(function  (err,res,body) {  
+                    done();
+                });
+            });
+            it('DELETE\t/api/thing/:id',function  (done) { 
+                var req = request('localhost:3000').put('/api/thing/'+createObj._id)
+                    .set('Accept', 'application/json'); 
+                    req.send();
+                req.expect(200)
+                .end(function  (err,res,body) {  
+                    done();
+                });
+            });
+
+
+            // test('get', function  () {
+            //     return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
+            // },function  (res) {  
+            //     if(JSON.stringify(res.body) !== JSON.stringify(things[0])) return 'Failed';
+            // });
+            // test('delete', function  () {
+            //     return ['/api/thing/:id',things && ('/api/thing/' + things[0].id) || undefined];
+            // },204); 
         });
     });
 });

@@ -15,30 +15,26 @@ describe('api-router', function() {
         before(function(done) {
             app = express();
             var ops = {
-                authResolver: function(req, res, next) {
+                authenticator: function(req, res, next) {
                     return true;
                 },
-                authorizationResolver: function(req, res, next) {
+                authorizer: function(req, res, next) {
                     return true;
                 },
-                url: 'api',
+                path: 'api',
                 get: return200,
-                post: return200,
-                getMeta: {
-                    anonymous: true,
-                    method: return200
-                },
-                postMeta: return200,
+                'get:id': return200,
+                post: {fun:return200},
+                getMeta:return200,
+                methods:[],
                 routes: [{
-                    url: 'user', 
-                    get: return200,
-                    postUser: return200,
+                    path: 'user',  
                     routes: [{
-                        url: 'admin',
-                        postCreate: return200
+                        path: 'admin',
+                        get: {fun:return200},
                     }]
                 }]
-            };
+            }; 
             apiRouter(app, ops);
             server = app.listen(3000);
             done();
@@ -49,12 +45,9 @@ describe('api-router', function() {
         });
         describe('routing', function() {
             test('get', '/api');
-            test('post', '/api');
-            test('get', '/api/meta');
-            test('post', '/api/meta');
-            test('get', '/api/user');
-            test('post', '/api/user/user');
-            test('post', '/api/user/admin/create');
+            test('get', '/api/123');
+            test('get', '/api/meta');  
+            test('get', '/api/user'); 
 
         });
     });

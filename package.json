@@ -59,6 +59,10 @@
     "underscore": "^1.6.0",
     "passport": "^0.2.0",
     "mongoose": "^3.8.15",
-    "body-parser": "^1.6.7"
+    "body-parser": "^1.6.7",
+    "lodash": "^2.4.1",
+    "bliss": "^1.0.1",
+    "uglify-js": "^2.4.15",
+    "vash": "^0.7.12-1"
   }
 }
