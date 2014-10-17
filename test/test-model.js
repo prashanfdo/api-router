@@ -35,7 +35,7 @@ describe('api-router', function() {
                 models:[{
                     path:'thing',
                     model:thingsModel,
-                }],
+                },],
             };
             apiRouter(app, ops);
             server = app.listen(3000); 
@@ -50,7 +50,7 @@ describe('api-router', function() {
             server.close();
             done();
         });
-        describe('routing', function() { 
+        describe('basic routing', function() { 
             var that = this;
             test('get', '/api/thing',function  (res) {
                 if(JSON.stringify(res.body) !== JSON.stringify(things))

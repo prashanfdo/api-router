@@ -9,9 +9,11 @@ var ThingSchema = new Schema({
 });
 var Thing = mongoose.model('Thing', ThingSchema);
 var MoreThingSchema = new Schema({
-    name: String
+    name: String,
+    info: String
 });
 var MoreThing = mongoose.model('MoreThing', MoreThingSchema);
+ 
 
 module.exports = {
     seedThings: seedThings
@@ -40,7 +42,7 @@ function seedThings(cb) {
         }, function() {
             MoreThing.find({}).remove(function() {
                 MoreThing.create({
-                    name: 'Development Tools'
+                    name: 'Development Tools',info:'xxxx'
                 }, {
                     name: 'Server and Client integration'
                 }, {
