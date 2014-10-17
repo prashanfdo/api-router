@@ -1,4 +1,3 @@
-var async = require('async');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
