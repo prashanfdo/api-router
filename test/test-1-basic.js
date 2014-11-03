@@ -29,6 +29,7 @@ describe('api-router', function() {
                 methods:[],
                 routes: [{
                     path: 'user',  
+                    getAllUsers:return200,
                     routes: [{
                         path: 'admin',
                         get: {fun:return200},
@@ -47,8 +48,9 @@ describe('api-router', function() {
             test('get', '/api');
             test('get', '/api/123');
             test('get', '/api/meta');  
-            test('get', '/api/user'); 
-
+            test('get', '/api/user');  
+            test('get', '/api/user/AllUsers');
+            test('get', '/api/user/AllUsersX',404);
         });
     });
 });

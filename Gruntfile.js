@@ -1,4 +1,10 @@
 'use strict';
+var fs = require('fs');
+var _ = require('lodash');
+
+var testFiles = _.filter(fs.readdirSync('./test'),function  (fileName) {
+  return /test-[0-9]+-/.test(fileName);
+});
 
 module.exports = function(grunt) {
     // Show elapsed time at the end
@@ -11,7 +17,7 @@ module.exports = function(grunt) {
         concurrent: {
             debug: {
                 tasks: [
-                'simplemocha',
+                    'simplemocha',
                     'node-inspector'
                 ],
                 options: {
@@ -42,7 +48,14 @@ module.exports = function(grunt) {
                 }
             }
         },
-        simplemocha: {
+        simplemocha: (function(ops) {
+            //getting test files for creating grunt tasks 
+            testFiles.forEach(function(item) {
+                var name = item.replace(/(test-[0-9]+-|-|\.js)/g,'');
+                ops[name] = {src:['test/'+item]};
+            });
+            return ops;    
+        })({
             options: {
                 globals: ['expect'],
                 timeout: 3000,
@@ -51,24 +64,9 @@ module.exports = function(grunt) {
                 reporter: 'spec'
             },
             all: {
-                src: ['test/*.js']
-            },
-            basic:{
-                src:['test/test-basic.js']
-            },
-            auth:{
-                src:['test/test-auth.js']
-            },
-            modelBind:{
-                src:['test/test-model.js']
-            },
-            inlineparser:{
-                src:['test/test-parser.js']
-            },
-            clientscript:{
-                src:['test/test-client-script.js']
+                src: ['test/test*.js']
             }
-        },
+        }),
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
@@ -84,9 +82,9 @@ module.exports = function(grunt) {
                 src: ['test/**/*.js']
             }
         },
-        mocha_debug:{
-            options:{
-                check:'test/**/*.js',
+        mocha_debug: {
+            options: {
+                check: 'test/**/*.js',
                 reporter: 'tap'
             }
         },
@@ -117,10 +115,9 @@ module.exports = function(grunt) {
     // Default task.
     //grunt.registerTask('default', ['simplemocha', 'node-inspector', 'watch']);
     grunt.registerTask('default', ['simplemocha:all']);
-    grunt.registerTask('test-basic', ['simplemocha:basic']);
-    grunt.registerTask('test-auth', ['simplemocha:auth']);
-    grunt.registerTask('test-modelbind', ['simplemocha:modelBind']);
-    grunt.registerTask('test-clientscript', ['simplemocha:clientscript']);
-    grunt.registerTask('test-inlineparser', ['simplemocha:inlineparser']);
-
+    //registeing test files
+    testFiles.forEach(function(item) {
+        var name = item.replace(/(test-[0-9]+-|-|\.js)/g,'');
+        grunt.registerTask('test-'+name, ['simplemocha:'+name]);
+    });
 };
