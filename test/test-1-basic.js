@@ -6,7 +6,9 @@ var assert = require('assert');
 var request = require('supertest');
 var express = require('express');
 var apiRouter = require('../lib/api-router.js');
-var Session = require('supertest-session')({app:'localhost:3000'});
+var Session = require('supertest-session')({
+    app: 'localhost:3000'
+});
 
 
 describe('api-router', function() {
@@ -21,21 +23,128 @@ describe('api-router', function() {
                 authorizer: function(req, res, next) {
                     return true;
                 },
-                path: 'api',
-                get: return200,
-                'get:id': return200,
-                post: {fun:return200},
-                getMeta:return200,
-                methods:[],
-                routes: [{
-                    path: 'user',  
-                    getAllUsers:return200,
-                    routes: [{
-                        path: 'admin',
-                        get: {fun:return200},
+                url: '/api',
+                methodCollection: [{
+                    authenticator: function(req, res, next) {
+                        return true;
+                    },
+                    authorizer: function(req, res, next) {
+                        return true;
+                    },
+                    allow: '*',
+                    verb: 'get',
+                    handlers: [{
+                        allow: '*',
+                        handler: send('ok')
+                    }]
+                }, {
+                    authenticator: function(req, res, next) {
+                        return true;
+                    },
+                    authorizer: function(req, res, next) {
+                        return true;
+                    },
+                    allow: '*',
+                    verb: 'post',
+                    handlers: [{
+                        allow: '*',
+                        handler: send('ok')
+                    }]
+                }],
+                routeCollection: [{
+                    authenticator: function(req, res, next) {
+                        return true;
+                    },
+                    authorizer: function(req, res, next) {
+                        return true;
+                    },
+                    url: '/api/nestedurl',
+                    methodCollection: [{
+                        authenticator: function(req, res, next) {
+                            return true;
+                        },
+                        authorizer: function(req, res, next) {
+                            return true;
+                        },
+                        allow: '*',
+                        verb: 'get',
+                        handlers: [{
+                            allow: '*',
+                            handler: send('ok')
+                        }]
+                    }],
+                    routeCollection: [{
+                        authenticator: function(req, res, next) {
+                            return true;
+                        },
+                        authorizer: function(req, res, next) {
+                            return true;
+                        },
+                        url: '/api/nestedurl',
+                        methodCollection: [{
+                            authenticator: function(req, res, next) {
+                                return true;
+                            },
+                            authorizer: function(req, res, next) {
+                                return true;
+                            },
+                            allow: '*',
+                            verb: 'get',
+                            handlers: [{
+                                allow: '*',
+                                handler: send('ok')
+                            }]
+                        }],
+                        routeCollection: [{
+                            authenticator: function(req, res, next) {
+                                return true;
+                            },
+                            authorizer: function(req, res, next) {
+                                return true;
+                            },
+                            url: '/api/nestedurl',
+                            methodCollection: [{
+                                authenticator: function(req, res, next) {
+                                    return true;
+                                },
+                                authorizer: function(req, res, next) {
+                                    return true;
+                                },
+                                allow: '*',
+                                verb: 'get',
+                                handlers: [{
+                                    allow: '*',
+                                    handler: send('ok')
+                                }]
+                            }],
+                            routeCollection: [{
+                                authenticator: function(req, res, next) {
+                                    return true;
+                                },
+                                authorizer: function(req, res, next) {
+                                    return true;
+                                },
+                                url: '/api/very-long-url',
+                                methodCollection: [{
+                                    authenticator: function(req, res, next) {
+                                        return true;
+                                    },
+                                    authorizer: function(req, res, next) {
+                                        return true;
+                                    },
+                                    allow: '*',
+                                    verb: 'get',
+                                    handlers: [{
+                                        allow: '*',
+                                        handler: send('ok')
+                                    }]
+                                }],
+                                routeCollection: []
+                            }]
+                        }]
                     }]
                 }]
-            }; 
+            };
             apiRouter(app, ops);
             server = app.listen(3000);
             done();
@@ -46,14 +155,21 @@ describe('api-router', function() {
         });
         describe('routing', function() {
             test('get', '/api');
-            test('get', '/api/123');
-            test('get', '/api/meta');  
-            test('get', '/api/user');  
-            test('get', '/api/user/AllUsers');
-            test('get', '/api/user/AllUsersX',404);
+            test('post', '/api');
+            test('get', '/fakeurl', 404);
+            test('get', '/api/very-long-url');
         });
     });
 });
+
+function send(obj, status) {
+    status = status || 200;
+    obj = obj || {};
+    return function(req, res, next) {
+        res.status(status).send(obj);
+        next();
+    };
+}
 
 function return200(req, res) {
     res.status(200).send({

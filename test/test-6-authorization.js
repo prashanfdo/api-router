@@ -84,5 +84,44 @@ describe('Authorization', function() {
                 .end(done);
         });
     });
+    describe('Regression', function() {
+        var app, server;
+        before(function(done) {
+            app = express();
+            app.use(cookieParser());
+            var ops = {
+                authenticator: function(req, res) {
+                    return true;
+                },
+                authorizer: function(req, res, allowed) {
+                    if (allowed === undefined) {
+                        return true;
+                    }
+                    return allowed.indexOf(req.cookies.role) >= 0;
+                },
+                path: 'api',
+                getTouch: function(req, res, next) {
+                    res.status(200).send();
+                    next();
+                }
+            };
+            var r = new apiRouter(app, ops);
+            r.passportAuth();
+            server = app.listen(3000);
+            done();
+        });
+        after(function(done) {
+            server.close();
+            done();
+        });
+        it('should allow specified role', function(done) {
+            var session = new Session();
+            session.get('/api/touch')
+                .set('cookie', 'role=user')
+                .send({})
+                .expect(200)
+                .end(done);
+        });
+    });
 
 });

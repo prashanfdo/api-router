@@ -31,7 +31,6 @@ describe('api-router', function() {
                     return true;
                 },
                 path: 'api',
-                get: return200,
                 models:[{
                     path:'thing',
                     model:thingsModel,
