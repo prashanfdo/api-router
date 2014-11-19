@@ -33,7 +33,7 @@ apiRouter(app,{
                       hello: 'world'
                   });
                 },
-                // POST /api
+                //  POST /api
                 post:  function(req,res){
                   res.send({
                       hello: 'post-er'
