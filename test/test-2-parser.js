@@ -51,7 +51,7 @@ describe('Parser', function() {
             var ops = {
                 path: 'api',
                 routes: {
-                    user: {
+                    'user': {
                         allow: '*'
                     }
                 }

@@ -3,7 +3,7 @@ var fs = require('fs');
 var _ = require('lodash');
 
 var testFiles = _.filter(fs.readdirSync('./test'),function  (fileName) {
-  return /test-[0-9]+-/.test(fileName);
+  return /test-[0-9\.]+-/.test(fileName);
 });
 
 module.exports = function(grunt) {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         simplemocha: (function(ops) {
             //getting test files for creating grunt tasks 
             testFiles.forEach(function(item) {
-                var name = item.replace(/(test-[0-9]+-|-|\.js)/g,'');
+                var name = item.replace(/(test-[0-9\.]+-|\.js)/g,'');
                 ops[name] = {src:['test/'+item]};
             });
             return ops;    
@@ -117,7 +117,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['simplemocha:all']);
     //registeing test files
     testFiles.forEach(function(item) {
-        var name = item.replace(/(test-[0-9]+-|-|\.js)/g,'');
+        var name = item.replace(/(test-[0-9\.]+-|\.js)/g,'');
         grunt.registerTask('test-'+name, ['simplemocha:'+name]);
     });
 };
