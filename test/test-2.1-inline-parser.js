@@ -3,6 +3,7 @@
 var inlineParser = require('../lib/ops-parser.js');
 var should = require('should');
 
+
 describe('Inline parser', function() {
     var sampleAuthFun = function() {};
     var sampleAuthorizeFun = function() {};
@@ -13,18 +14,13 @@ describe('Inline parser', function() {
     var sampleHandlerFun2 = function() {};
     var sampleHandlerFun3 = function() {};
     var sampleHandlerFun4 = function() {};
-    var sampleModel = {};
     describe('Basics', function(done) {
         it("verb only methods", function() {
             //primitive ops
             var ops = {
-                models: [{
-                    path: 'thing',
-                    model: sampleModel,
-                    methods:{
-                        
-                    }
-                }]
+                'get': {
+                    anything: 'goes here'
+                }
             };
             inlineParser.parse(ops);
             (ops).should.containDeep({
