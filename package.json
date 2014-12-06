@@ -1,6 +1,6 @@
 {
   "name": "api-router",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "main": "lib/api-router.js",
   "description": "Beefup your routes in minutes",
   "homepage": "https://github.com/Prashanfdo/api-router",

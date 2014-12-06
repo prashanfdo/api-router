@@ -93,7 +93,7 @@ describe('Model parser', function() {
                     }]
                 }]
             });
-        }); 
+        });
         it("override model methods handler", function() {
             //primitive ops
             var ops = {
@@ -103,7 +103,7 @@ describe('Model parser', function() {
                     model: sampleModel,
                     methods: {
                         index: {
-                            handler:sampleHandlerFun
+                            handler: sampleHandlerFun
                         }
                     }
                 }]
@@ -116,7 +116,107 @@ describe('Model parser', function() {
                         verb: 'get',
                         anonymous: false,
                         handlerCollection: [{
-                            handler:sampleHandlerFun
+                            handler: sampleHandlerFun
+                        }]
+                    }]
+                }]
+            });
+        });
+        it("model object notation works", function() {
+            var ops = {
+                path: 'api',
+                models: {
+                    things: {
+                        model: sampleModel
+                    }
+                },
+            };
+            inlineParser.parse(ops);
+            ops.should.containDeep({
+                routeCollection: [{
+                    path: 'things',
+                    methodCollection: [{
+                        verb: 'get',
+                        anonymous: false,
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }, {
+                        verb: 'post',
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }],
+                    routeCollection: [{
+                        path: ':id',
+                        url: '/api/things/:id',
+                        methodCollection: [{
+                            verb: 'get',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'put',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'delete',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }]
+                    }]
+                }]
+            });
+        });
+        it("inline model works", function() {
+            var ops = {
+                path: 'api',
+                modelThings: {
+                    model: sampleModel
+                },
+            };
+            inlineParser.parse(ops);
+            ops.should.containDeep({
+                routeCollection: [{
+                    path: 'Things',
+                    methodCollection: [{
+                        verb: 'get',
+                        anonymous: false,
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }, {
+                        verb: 'post',
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }],
+                    routeCollection: [{
+                        path: ':id',
+                        url: '/api/Things/:id',
+                        methodCollection: [{
+                            verb: 'get',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'put',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'delete',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
                         }]
                     }]
                 }]

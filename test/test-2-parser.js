@@ -237,12 +237,12 @@ describe('Parser', function() {
             //shorthand ops - handlers:{} -> handlerCollection:[]
             var ops = {
                 methodCollection: [{
-                    handlers:{
-                        'user':{
-                            handler:sampleHandlerFun
+                    handlers: {
+                        'user': {
+                            handler: sampleHandlerFun
                         },
-                        '*':{
-                            handler:sampleHandlerFun1
+                        '*': {
+                            handler: sampleHandlerFun1
                         }
                     }
                 }]
