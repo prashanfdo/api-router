@@ -105,7 +105,3 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 Copyright (c) 2014 Prashan Fernando  
 Licensed under the MIT license.
-
-
-inside dev
-added more dev
