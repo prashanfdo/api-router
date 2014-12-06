@@ -1,6 +1,5 @@
 'use strict';
 //node-debug C:\Users\prashanf\AppData\Roaming\npm\node_modules\grunt-cli\bin\grunt default
-var pd = require('pretty-data').pd;
 var inlineParser = require('../lib/ops-parser.js');
 var should = require('should');
 
