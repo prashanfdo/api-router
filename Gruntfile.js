@@ -5,7 +5,6 @@ var _ = require('lodash');
 var testFiles = _.filter(fs.readdirSync('./test'),function  (fileName) {
   return /test-[0-9\.]+-/.test(fileName);
 });
-
 module.exports = function(grunt) {
     // Show elapsed time at the end
     require('time-grunt')(grunt);

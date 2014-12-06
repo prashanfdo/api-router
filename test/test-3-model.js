@@ -3,7 +3,7 @@
 var inlineParser = require('../lib/ops-parser.js');
 var should = require('should');
 
-describe('Inline parser', function() {
+describe('Model parser', function() {
     var sampleAuthFun = function() {};
     var sampleAuthorizeFun = function() {};
     var sampleHandlerFun = function() {};
@@ -15,69 +15,108 @@ describe('Inline parser', function() {
     var sampleHandlerFun4 = function() {};
     var sampleModel = {};
     describe('Basics', function(done) {
-        it("verb only methods", function() {
+        it("primitives ops works", function() {
             //primitive ops
             var ops = {
-                models: [{
-                    path: 'thing',
+                path: 'api',
+                modelCollection: [{
+                    path: 'things',
                     model: sampleModel,
-                    methods:{
-                        
-                    }
                 }]
             };
             inlineParser.parse(ops);
-            (ops).should.containDeep({
-                methodCollection: [{
-                    verb: 'get',
-                    anything: 'goes here'
-                }]
-            });
-            //least ops
-            ops = {
-                'get': sampleHandlerFun
-            };
-            inlineParser.parse(ops);
-            (ops).should.containDeep({
-                methodCollection: [{
-                    verb: 'get',
-                    handlerCollection: [{
-                        allow: '*',
-                        handler: sampleHandlerFun
+            ops.should.containDeep({
+                routeCollection: [{
+                    path: 'things',
+                    methodCollection: [{
+                        verb: 'get',
+                        anonymous: false,
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }, {
+                        verb: 'post',
+                        handlerCollection: [{
+                            allow: '*'
+                        }]
+                    }],
+                    routeCollection: [{
+                        path: ':id',
+                        url: '/api/things/:id',
+                        methodCollection: [{
+                            verb: 'get',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'put',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }, {
+                            verb: 'delete',
+                            anonymous: false,
+                            handlerCollection: [{
+                                allow: '*'
+                            }]
+                        }]
                     }]
                 }]
             });
         });
-        it('methods with verb and path - eg. "getUsers"', function() {
+        it("override model methods accessibility", function() {
             //primitive ops
             var ops = {
-                'getUsers': {
-                    anything: 'goes here'
-                }
+                path: 'api',
+                modelCollection: [{
+                    path: 'things',
+                    model: sampleModel,
+                    methods: {
+                        index: {
+                            allow: 'members'
+                        }
+                    }
+                }]
             };
             inlineParser.parse(ops);
             ops.should.containDeep({
                 routeCollection: [{
-                    path: 'Users',
+                    path: 'things',
                     methodCollection: [{
                         verb: 'get',
-                        anything: 'goes here'
+                        anonymous: false,
+                        handlerCollection: [{
+                            allow: 'members'
+                        }]
                     }]
                 }]
             });
-            //least ops
-            ops = {
-                getUsers: sampleHandlerFun
+        }); 
+        it("override model methods handler", function() {
+            //primitive ops
+            var ops = {
+                path: 'api',
+                modelCollection: [{
+                    path: 'things',
+                    model: sampleModel,
+                    methods: {
+                        index: {
+                            handler:sampleHandlerFun
+                        }
+                    }
+                }]
             };
             inlineParser.parse(ops);
             ops.should.containDeep({
                 routeCollection: [{
-                    path: 'Users',
+                    path: 'things',
                     methodCollection: [{
                         verb: 'get',
+                        anonymous: false,
                         handlerCollection: [{
-                            allow: '*',
-                            handler: sampleHandlerFun
+                            handler:sampleHandlerFun
                         }]
                     }]
                 }]
